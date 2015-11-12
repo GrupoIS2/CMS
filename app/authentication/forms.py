@@ -1,7 +1,10 @@
 from flask.ext.wtf import Form # , RecaptchaField
-from wtforms import TextField, PasswordField, SubmitField # BooleanField
-from wtforms.validators import Required, Email, EqualTo, Length, Regexp
+from wtforms import TextField, PasswordField, SubmitField 
+from wtforms import TextAreaField, HiddenField, StringField, BooleanField
+from wtforms.ext.sqlalchemy.fields import QuerySelectField
+from wtforms.validators import Required, DataRequired, Email, EqualTo, Length, Regexp
 from models import db, User
+
 
 
 class SignupForm(Form):
@@ -13,13 +16,14 @@ class SignupForm(Form):
                 Required(message='Please enter a password.')])
     submit   = SubmitField("Create account")
 
+
     def __init__(self, *args, **kwargs):
         Form.__init__(self, *args, **kwargs)
+
 
     def validate(self):
         if not Form.validate(self):
             return False
-
         user = User.query.filter_by(email = self.email.data.lower()).first()
         if user:
             self.email.errors.append("That email is already taken.")
@@ -33,13 +37,14 @@ class LoginForm(Form):
     password = PasswordField('Password', [
                 Required(message='Must provide a password.')])
 
+
     def __init__(self, *args, **kwargs):
         Form.__init__(self, *args, **kwargs)
+
 
     def validate(self):
         if not Form.validate(self):
             return False
-
         user = User.query.filter_by(email = self.email.data).first()
         if(user is None):
             self.email.errors.append("That email is not registered.")
@@ -48,3 +53,19 @@ class LoginForm(Form):
         else:
             self.password.errors.append("Incorrect Password")
         return False
+
+
+class RecoverPassForm(Form):
+	email = TextField('Email Address', [Email(), Required(message='Forgot your email address?')])
+
+
+class ResetPasswordSubmit(Form):
+	password = PasswordField('Password', validators = [DataRequired()])
+	confirm = PasswordField('Confirm Password')
+
+
+class CreateUserForm(Form):
+	id = StringField('id', validators=[DataRequired()])
+	nickname = StringField('nickname', validators=[DataRequired()])
+	email = StringField('email', validators=[DataRequired()])
+	password = PasswordField('pass', validators=[DataRequired()])
