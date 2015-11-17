@@ -6,7 +6,7 @@ import 'dart:async' show Future;
 //http://demo7492033.mockable.io/sections
 
 class SectionResource {
-    String path = "http://demo7492033.mockable.io/sections";
+    String path = "http://demo5697287.mockable.io/sections";
     List section_list;
     SectionResource(callback){
         HttpRequest.getString(path)
