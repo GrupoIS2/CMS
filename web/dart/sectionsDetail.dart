@@ -33,7 +33,26 @@ setContent(){
 
 void setSaveRequest(Event e)
 {
-    print("SAVE");
+    e.preventDefault();
+
+    HttpRequest request = new HttpRequest();
+
+    request.onReadyStateChange.listen((_) {
+        if (request.readyState == HttpRequest.DONE && (request.status == 200 || request.status == 0)) 
+        {
+            window.alert("DONE");
+        }
+    });
+
+    var url = "http://demo7492033.mockable.io/sections/1";
+    request.open("POST", url, async: false);
+
+    String jsonData = '{' + 
+                            '"id": ' + querySelector("#id").value + ', ' +
+                            '"name": ' + querySelector("#name").value + ', ' +
+                            '"description": ' + querySelector("#description").value + ', ' +
+                        '}';
+    request.send(jsonData);
 }
 
 onSectionsReady(){
