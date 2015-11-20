@@ -31,12 +31,32 @@ setContent(){
 	 querySelector('#user_name').innerHtml = contentResource.content_list["user_name"];
 	 querySelector('#user_name').href = contentResource.content_list["user"];
    querySelector('#created').innerHtml = contentResource.content_list["created"];
-
 }
 
 void setSaveRequest(Event e)
 {
-	
+  e.preventDefault();
+
+	HttpRequest request = new HttpRequest();
+
+	request.onReadyStateChange.listen((_) {
+		if (request.readyState == HttpRequest.DONE && 
+				(request.status == 200 || request.status == 0)) {
+    	window.alert("Section saved.");
+		}
+	});
+
+	// POST the data to the server
+	var url = "http://demo7492033.mockable.io/contents/1";
+	request.open("POST", url, async: false);
+
+	String jsonData = '{' + 
+										'"id": ' + querySelector("#id").value + ', ' +
+										'"title": "' + querySelector("#title").value + '", ' +
+										'"body": "' + querySelector("#body").value + '", ' +
+										'"section_name": "' + querySelector("#section").value + '"' +
+										'}';
+	request.send(jsonData);
 }
 
 onContentsReady(){
