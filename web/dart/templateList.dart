@@ -33,7 +33,7 @@ fillTable(){
         row.insertCell(2).text = templateList.json_template_list[i]['default_use'];
         row.insertCell(3).text = templateList.json_template_list[i]['resource'];
         row.insertCell(4).text = templateList.json_template_list[i]['description'];
-            
+        row.insertCell(5).innerHtml = "<a href='template_form.html'> Detail </a>";            
     }
     
 }
