@@ -3,14 +3,12 @@ from flask import (
     request,
     render_template,
     flash,
-    g,
     session,
     redirect,
     url_for
 )
-from werkzeug import check_password_hash, generate_password_hash
 from app import db
-from app.authentication.constants import ReadRole, CommentRole, WriteRole
+from app.authentication.constants import READ_ROLE, COMMENT_ROLE, WRITE_ROLE
 from app.authentication.forms import LoginForm, SignupForm
 from app.authentication.models import User
 
@@ -43,11 +41,13 @@ def signup():
     if ('token' in session) and (User.verify_token(session['token'])):
         return redirect(url_for('auth.profile'))
     if request.method == 'POST':
-        if form.validate() == False:
+        if form.validate() is False:
             return render_template("authentication/signup.html", form=form)
         else:
-            new_user = User(form.username.data, form.email.data,\
-             form.password.data,ReadRole+CommentRole+WriteRole,1)
+            new_user = User(form.username.data,
+                            form.email.data,
+                            form.password.data,
+                            READ_ROLE + COMMENT_ROLE + WRITE_ROLE, 1)
             db.session.add(new_user)
             db.session.commit()
             session['user_id'] = new_user.id
