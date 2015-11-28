@@ -4,6 +4,7 @@ from app.sections.models import Sections
 from app.authentication.models import User
 from sqlalchemy import desc
 from webhelpers.text import urlify
+from webhelpers.date import time_ago_in_words
 
 
 class Article(db.Model):
@@ -42,4 +43,4 @@ class Article(db.Model):
 
     @property
     def created_in_words(self):
-        return time_ago_in_words(self.created)  # TODO : check function library
+        return time_ago_in_words(self.created)
