@@ -3,23 +3,22 @@ from flask import (
     request,
     render_template,
     flash,
-    g,
-    session,
-    redirect,
-    url_for
+    redirect
 )
 
-from app import app, db
+from app import db
 from app.sections.forms import CreateSectionForm, EditSectionForm
 from app.sections.models import Sections
 
 
 mod_sec = Blueprint('sec', __name__, url_prefix='/sec')
 
+
 @mod_sec.route('/views_sections/')
 def views_sections():
     sections = Sections.query.filter().all()
-    return render_template("sections/view_sections.html", sections = sections)
+    return render_template("sections/view_sections.html", sections=sections)
+
 
 @mod_sec.route('/create_sections/', methods=['GET', 'POST'])
 def create_section():
@@ -30,31 +29,31 @@ def create_section():
         db.session.commit()
         flash("sections created")
         return redirect("/sec/views_sections")
-    return render_template("sections/create_sections.html",form = form)
+    return render_template("sections/create_sections.html", form=form)
 
-@mod_sec.route('/modify_sections/', methods=['GET','POST'])
+
+@mod_sec.route('/modify_sections/', methods=['GET', 'POST'])
 def modify_sections():
-    
-    id_  = request.args.get('id',None)
+    id_ = request.args.get('id', None)
+
     section = Sections.query.get(id_)
 
     form_edit = EditSectionForm(request.form)
-    
     if form_edit.validate_on_submit():
         section.section_name = form_edit.section.data
-        section.description =  form_edit.description.data
+        section.description = form_edit.description.data
         db.session.commit()
         flash("Row edited")
         return redirect("/sec/views_sections")
-    return render_template("sections/modify_sections.html",form = form_edit)
+    return render_template("sections/modify_sections.html", form=form_edit)
 
-@mod_sec.route('/delete_sections/', methods=['GET','POST'])
+
+@mod_sec.route('/delete_sections/', methods=['GET', 'POST'])
 def delete_sections():
-   
-   id_  = request.args.get('id',None)
-   section = Sections.query.get(id_)
-   print section
-   db.session.delete(section)
-   db.session.commit()
-   flash("Row Deleted")
-   return redirect("/sec/views_sections")
+    id_ = request.args.get('id', None)
+    section = Sections.query.get(id_)
+    print section
+    db.session.delete(section)
+    db.session.commit()
+    flash("Row Deleted")
+    return redirect("/sec/views_sections")
